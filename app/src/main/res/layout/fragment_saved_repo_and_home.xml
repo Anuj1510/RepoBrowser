@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.SavedRepo_and_HomeFragment">
+
+    <TextView
+        android:id="@+id/EmptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Repository Found!!\nClick the button below\nand save your favourite repository"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/EmptyAnime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/EmptyAnime"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        android:visibility="invisible"
+        android:layout_height="350dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_fileName="EmptyListAnimation.json" />
+
+    <Button
+        android:id="@+id/Addbutton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/btn1"
+        app:icon="@drawable/add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.838"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EmptyAnime"
+        app:layout_constraintVertical_bias="0.281" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

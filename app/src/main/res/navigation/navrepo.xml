@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navrepo"
+    app:startDestination="@id/savedRepo_and_HomeFragment">
+
+    <fragment
+        android:id="@+id/savedRepo_and_HomeFragment"
+        android:name="com.example.repo_browser.fragments.SavedRepo_and_HomeFragment"
+        android:label="fragment_saved_repo_and_home"
+        tools:layout="@layout/fragment_saved_repo_and_home" >
+        <action
+            android:id="@+id/action_savedRepo_and_HomeFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/from_right"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.repo_browser.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_savedRepo_and_HomeFragment"
+            app:destination="@id/savedRepo_and_HomeFragment"
+            app:enterAnim="@anim/from_left"
+            />
+        <action
+            android:id="@+id/action_searchFragment_to_allRepoFragment"
+            app:enterAnim="@anim/from_right"
+            app:destination="@id/allRepoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allRepoFragment"
+        android:name="com.example.repo_browser.fragments.AllRepoFragment"
+        android:label="fragment_all_repo"
+        tools:layout="@layout/fragment_all_repo" >
+        <action
+            android:id="@+id/action_allRepoFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+</navigation>
