@@ -2,10 +2,13 @@ package com.example.repo_browser.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.repo_browser.R
@@ -13,13 +16,13 @@ import com.example.repo_browser.activities.RepoActivity
 import com.example.repo_browser.adapter.RepoAdapter
 import com.example.repo_browser.databinding.FragmentAllRepoBinding
 import com.example.repo_browser.models.RepoData
+import com.example.repo_browser.viewmodels.RepoViewModel
 
 class AllRepoFragment : Fragment() {
     private lateinit var binding: FragmentAllRepoBinding
-    private lateinit var repoArrayList:ArrayList<RepoData>
-    private lateinit var repoAdapter: RepoAdapter
-    private lateinit var imageId:Array<Int>
-    private lateinit var title:Array<String>
+    private lateinit var viewModel: RepoViewModel
+    private lateinit var adapter: RepoAdapter
+    private lateinit var editText: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,44 +35,37 @@ class AllRepoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        imageId = arrayOf(
-            R.drawable.candidate1,
-            R.drawable.candidate2,
-            R.drawable.candidate3,
-            R.drawable.candidate4,
-            R.drawable.candidate5,
-            R.drawable.candidate6,
-            R.drawable.candidate7,
-            R.drawable.chrisevans
-        )
-
-        title = arrayOf(
-            "Hey this is your favourite Repo....Save it",
-            "Hey this is your favourite Repo....Save it",
-            "Hey this is your favourite Repo....Save it",
-            "Hey this is your favourite Repo....Save it",
-            "Hey this is your favourite Repo....Save it",
-            "Hey this is your favourite Repo....Save it",
-            "Hey this is your favourite Repo....Save it",
-            "Hey this is your favourite Repo....Save it"
-        )
-
-        binding.RecyclerViewRepo.layoutManager = LinearLayoutManager(this.requireContext())
-        binding.RecyclerViewRepo.setHasFixedSize(true)
-
-        repoArrayList= arrayListOf<RepoData>()
-        for (i in imageId.indices){
-            val data = RepoData(imageId[i],title[i])
-            repoArrayList.add(data)
+        editText = requireView().findViewById(R.id.OwnerEditText)
+        adapter = RepoAdapter()
+        adapter.notifyDataSetChanged()
+        viewModel = ViewModelProvider(this,ViewModelProvider.NewInstanceFactory()).get(RepoViewModel::class.java)
+        binding.apply {
+            RecyclerViewRepo.layoutManager = LinearLayoutManager(requireContext())
+            RecyclerViewRepo.setHasFixedSize(true)
+            RecyclerViewRepo.adapter = adapter
+            
+            editText.setOnKeyListener { v, keyCode, event ->
+                if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                    searchRepo()
+                    return@setOnKeyListener true
+                }
+                return@setOnKeyListener false
+            }
         }
 
-        binding.RecyclerViewRepo.adapter = RepoAdapter(repoArrayList)
-
-        repoAdapter = binding.RecyclerViewRepo.adapter as RepoAdapter
-        repoAdapter.onItemClick = {
-            val intent = Intent(this@AllRepoFragment.requireContext(),RepoActivity::class.java)
-            startActivity(intent)
+        viewModel.searchRepo().observe(this) {
+            if (it != null) {
+                adapter.setList(it)
+            }
         }
 
+    }
+
+    private fun searchRepo() {
+        binding.apply {
+            val query = editText.text.toString()
+            if(query.isEmpty()) return
+            viewModel.setSearchRepo(query)
+        }
     }
 }

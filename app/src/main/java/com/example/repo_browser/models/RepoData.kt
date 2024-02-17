@@ -1,3 +1,3 @@
 package com.example.repo_browser.models
 
-data class RepoData(var titleImage:Int,var heading:String)
+data class RepoData(val avatar_url:String,val name:String)
