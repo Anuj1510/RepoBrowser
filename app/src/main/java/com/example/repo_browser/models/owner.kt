@@ -1,6 +1,6 @@
 package com.example.repo_browser.models
 
-data class Owner(
+data class owner(
     val avatar_url: String,
     val events_url: String,
     val followers_url: String,

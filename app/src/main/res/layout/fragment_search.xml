@@ -29,7 +29,6 @@
         android:layout_height="60dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:hint="Owner"
         android:textColor="@color/white"
         android:textAlignment="center"
         android:textColorHint="@color/white"

@@ -1,5 +1,6 @@
 package com.example.repo_browser.fragments
 
+import SharedViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
@@ -8,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +27,8 @@ class AllRepoFragment : Fragment() {
     private lateinit var viewModel: RepoViewModel
     private lateinit var adapter: RepoAdapter
     private lateinit var editText: EditText
+    private val sharedViewModel:SharedViewModel by activityViewModels()
+    private var output:String="WeVoteAdmin"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +41,14 @@ class AllRepoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        editText = requireView().findViewById(R.id.OwnerEditText)
+//        editText = requireView().findViewById(R.id.OwnerEditText)
+//        output = arguments?.getString("message")
+        sharedViewModel.sharedText.observe(viewLifecycleOwner, Observer { newText ->
+            output = newText
+        })
+        if(output.isEmpty()){
+            Toast.makeText(requireContext(),"String is empty",Toast.LENGTH_SHORT).show()
+        }
         adapter = RepoAdapter()
         adapter.notifyDataSetChanged()
         viewModel = ViewModelProvider(this,ViewModelProvider.NewInstanceFactory()).get(RepoViewModel::class.java)
@@ -43,14 +56,14 @@ class AllRepoFragment : Fragment() {
             RecyclerViewRepo.layoutManager = LinearLayoutManager(requireContext())
             RecyclerViewRepo.setHasFixedSize(true)
             RecyclerViewRepo.adapter = adapter
-            
-            editText.setOnKeyListener { v, keyCode, event ->
-                if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
-                    searchRepo()
-                    return@setOnKeyListener true
-                }
-                return@setOnKeyListener false
-            }
+            searchRepo()
+//            editText.setOnKeyListener { v, keyCode, event ->
+//                if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+//
+//                    return@setOnKeyListener true
+//                }
+//                return@setOnKeyListener false
+//            }
         }
 
         viewModel.searchRepo().observe(this) {
@@ -63,7 +76,7 @@ class AllRepoFragment : Fragment() {
 
     private fun searchRepo() {
         binding.apply {
-            val query = editText.text.toString()
+            val query = output
             if(query.isEmpty()) return
             viewModel.setSearchRepo(query)
         }

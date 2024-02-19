@@ -42,11 +42,14 @@ class RepoAdapter:RecyclerView.Adapter<RepoAdapter.ViewHolder>() {
     inner class ViewHolder(val binding:RepoItemBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(repo:RepoData){
             binding.apply{
-                Glide.with(itemView)
-                    .load(repo.avatar_url)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .centerCrop()
-                    .into(titleImage)
+                repo.owner?.let {
+                    Glide.with(itemView.context)
+                        .load(it.avatar_url)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .centerCrop()
+                        .into(titleImage)
+                }
+
                 repoText.text = repo.name
             }
         }
