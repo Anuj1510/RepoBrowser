@@ -1,9 +1,7 @@
 package com.example.repo_browser.fragments
 
 import SharedViewModel
-import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,12 +12,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.repo_browser.R
-import com.example.repo_browser.activities.RepoActivity
 import com.example.repo_browser.adapter.RepoAdapter
 import com.example.repo_browser.databinding.FragmentAllRepoBinding
-import com.example.repo_browser.models.RepoData
 import com.example.repo_browser.viewmodels.RepoViewModel
 
 class AllRepoFragment : Fragment() {
@@ -28,7 +22,7 @@ class AllRepoFragment : Fragment() {
     private lateinit var adapter: RepoAdapter
     private lateinit var editText: EditText
     private val sharedViewModel:SharedViewModel by activityViewModels()
-    private var output:String="WeVoteAdmin"
+//    var output:String=""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,12 +37,10 @@ class AllRepoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 //        editText = requireView().findViewById(R.id.OwnerEditText)
 //        output = arguments?.getString("message")
-        sharedViewModel.sharedText.observe(viewLifecycleOwner, Observer { newText ->
-            output = newText
-        })
-        if(output.isEmpty()){
-            Toast.makeText(requireContext(),"String is empty",Toast.LENGTH_SHORT).show()
-        }
+
+//        if(output.isEmpty()){
+//            Toast.makeText(requireContext(),"String is empty",Toast.LENGTH_SHORT).show()
+//        }
         adapter = RepoAdapter()
         adapter.notifyDataSetChanged()
         viewModel = ViewModelProvider(this,ViewModelProvider.NewInstanceFactory()).get(RepoViewModel::class.java)
@@ -56,7 +48,12 @@ class AllRepoFragment : Fragment() {
             RecyclerViewRepo.layoutManager = LinearLayoutManager(requireContext())
             RecyclerViewRepo.setHasFixedSize(true)
             RecyclerViewRepo.adapter = adapter
-            searchRepo()
+            sharedViewModel.sharedText.observe(viewLifecycleOwner, Observer { newText ->
+//                Toast.makeText(requireContext(),"$newText",Toast.LENGTH_SHORT).show()
+//                output = newText.toString()
+                searchRepo(newText)
+            })
+
 //            editText.setOnKeyListener { v, keyCode, event ->
 //                if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
 //
@@ -74,11 +71,13 @@ class AllRepoFragment : Fragment() {
 
     }
 
-    private fun searchRepo() {
+    private fun searchRepo(output: String) {
         binding.apply {
-            val query = output
-            if(query.isEmpty()) return
-            viewModel.setSearchRepo(query)
+            if (output.isEmpty()){
+                Toast.makeText(requireContext(),"Please Enter the Repo Name",Toast.LENGTH_LONG).show()
+                return
+            }
+            viewModel.setSearchRepo(output)
         }
     }
 }
