@@ -15,6 +15,7 @@ import com.google.android.material.imageview.ShapeableImageView
 
 class RepoAdapter:RecyclerView.Adapter<RepoAdapter.ViewHolder>() {
 
+
     var onItemClick : ((RepoData) -> Unit)? = null
 
     private val list = ArrayList<RepoData>()
@@ -37,6 +38,9 @@ class RepoAdapter:RecyclerView.Adapter<RepoAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(list[position])
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(list[position])
+        }
     }
 
     inner class ViewHolder(val binding:RepoItemBinding):RecyclerView.ViewHolder(binding.root){
